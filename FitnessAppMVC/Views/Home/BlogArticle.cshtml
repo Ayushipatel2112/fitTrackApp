@@ -1,0 +1,154 @@
+@model FitnessAppMVC.Models.BlogPost
+@{
+    ViewData["Title"] = Model?.Title ?? "Article Not Found";
+    var relatedPosts = ViewBag.RecentPosts as List<FitnessAppMVC.Models.BlogPost>;
+}
+
+<div class="home-page marketing-page blog-page">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i data-lucide="heart" fill="#60a5fa" color="#60a5fa" size="32"></i>
+                <span>FitTrack</span>
+            </div>
+
+            <div class="nav-menu" aria-label="Primary">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/Home/Services" class="nav-link">Services</a>
+                <a href="/Home/Blog" class="nav-link active">Blog</a>
+                <a href="/Home/Contact" class="nav-link">Contact</a>
+            </div>
+
+            <div class="nav-links nav-actions">
+                <a href="/Account/Login" class="btn-outline">Login</a>
+                <a href="/Account/Register" class="btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    @if (Model == null)
+    {
+        <section class="blog-article-section">
+            <div class="container">
+                <div class="blog-article-card blog-article-not-found">
+                    <h1>Article Not Found</h1>
+                    <p>The article you are trying to read does not exist or may have been moved.</p>
+                    <a href="/Home/Blog" class="article-back-link">
+                        <i data-lucide="arrow-left" size="16"></i> Back to Blog
+                    </a>
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <section class="marketing-hero blog-hero">
+            <div class="container">
+                <a href="/Home/Blog" class="article-back-link">
+                    <i data-lucide="arrow-left" size="16"></i> Back to Blog
+                </a>
+                <p class="hero-kicker">
+                    <i data-lucide="sparkles" size="16"></i>
+                    Practical knowledge you can apply this week
+                </p>
+                <h1 class="hero-title article-title">@Model.Title</h1>
+
+                <div class="blog-meta article-meta">
+                    <span>
+                        <i data-lucide="book-open" size="14"></i>
+                        @Model.Category
+                    </span>
+                    <span>
+                        <i data-lucide="user" size="14"></i>
+                        @Model.Author
+                    </span>
+                    <span>
+                        <i data-lucide="calendar" size="14"></i>
+                        @Model.Date
+                    </span>
+                    <span>
+                        <i data-lucide="clock" size="14"></i>
+                        @Model.ReadTime
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <section class="blog-article-section">
+            <div class="container blog-article-layout">
+                <article class="blog-article-card">
+                    <p class="article-intro">@Model.Excerpt</p>
+
+                    <div class="article-content">
+                        @foreach (var paragraph in Model.ContentList)
+                        {
+                            <p>@paragraph</p>
+                        }
+                    </div>
+                </article>
+
+                <aside class="blog-article-sidecard">
+                    <h3>Key Takeaways</h3>
+                    <ul>
+                        @foreach (var point in Model.TakeawaysList)
+                        {
+                            <li>
+                                <i data-lucide="check-circle-2" size="16"></i>
+                                <span>@point</span>
+                            </li>
+                        }
+                    </ul>
+
+                    <div class="article-side-cta">
+                        <h4>Track Your Progress with FitTrack</h4>
+                        <p>Turn these tips into daily habits using workouts, meals, and sleep tracking.</p>
+                        <a href="/Account/Register" class="btn-primary">Create Free Account</a>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+        @if (relatedPosts != null && relatedPosts.Any())
+        {
+            <section class="related-blog-section">
+                <div class="container">
+                    <h2>More Articles</h2>
+                    <div class="related-blog-grid">
+                        @foreach (var related in relatedPosts)
+                        {
+                            <article class="related-blog-card">
+                                <span class="blog-category">
+                                    <i data-lucide="book-open" size="15"></i>
+                                    @related.Category
+                                </span>
+                                <h3>@related.Title</h3>
+                                <p>@related.Excerpt</p>
+                                <a href="/Home/BlogArticle/@related.Id" class="blog-link-btn">
+                                    Read Article
+                                </a>
+                            </article>
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+    }
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/Home/Services">Services</a>
+                <a href="/Home/Blog">Blog</a>
+                <a href="/Home/Contact">Contact</a>
+            </div>
+            <p>&copy; 2026 FitTrack. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+    </script>
+}

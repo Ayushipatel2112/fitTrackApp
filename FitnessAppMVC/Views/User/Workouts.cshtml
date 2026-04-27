@@ -1,0 +1,194 @@
+@model IEnumerable<FitnessAppMVC.Models.Workout>
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Workout Tracker";
+}
+
+<link rel="stylesheet" href="~/css/Tracker.css" asp-append-version="true" />
+
+<div class="tracker-container">
+    <div class="tracker-header">
+        <div>
+            <h1><i data-lucide="dumbbell" size="32"></i> Workout Tracker</h1>
+            <p>Log and track your exercise routines</p>
+        </div>
+        <button class="btn-primary" id="add-workout-btn">
+            <i data-lucide="plus" size="20"></i> Log Workout
+        </button>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success"><i data-lucide="check-circle" size="18"></i> @TempData["Success"]</div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-error"><i data-lucide="alert-circle" size="18"></i> @TempData["Error"]</div>
+    }
+
+    <!-- ADD WORKOUT FORM -->
+    <div class="form-card" id="workout-form" style="display: none;">
+        <h2>Log New Workout</h2>
+        <form method="post" action="/User/AddWorkout">
+            @Html.AntiForgeryToken()
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Exercise Name *</label>
+                    <input type="text" name="Title" placeholder="e.g., Bench Press, Running" required />
+                </div>
+                <div class="form-group">
+                    <label>Type *</label>
+                    <select name="WorkoutType">
+                        <option value="strength">Strength Training</option>
+                        <option value="cardio">Cardio</option>
+                        <option value="flexibility">Flexibility</option>
+                        <option value="sports">Sports</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description *</label>
+                <input type="text" name="Description" placeholder="Brief description of your workout" required />
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Duration (minutes) *</label>
+                    <input type="number" name="DurationMinutes" min="1" max="480" required />
+                </div>
+                <div class="form-group">
+                    <label>Calories Burned</label>
+                    <input type="number" name="CaloriesBurned" min="0" max="5000" value="0" />
+                </div>
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="datetime-local" name="Date" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" required />
+                </div>
+            </div>
+            <div class="form-row" id="strength-fields">
+                <div class="form-group">
+                    <label>Sets</label>
+                    <input type="number" name="Sets" min="1" max="100" placeholder="e.g., 4" />
+                </div>
+                <div class="form-group">
+                    <label>Reps</label>
+                    <input type="number" name="Reps" min="1" max="1000" placeholder="e.g., 10" />
+                </div>
+                <div class="form-group">
+                    <label>Weight (kg)</label>
+                    <input type="number" name="WeightKg" min="0" step="0.5" placeholder="e.g., 60" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea name="Notes" rows="2" placeholder="Any notes about this workout..."></textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i data-lucide="save" size="18"></i> Save Workout
+                </button>
+                <button type="button" class="btn-cancel" id="cancel-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+        <a href="/User/Workouts" class="filter-chip @(ViewBag.FilterType == null ? "active" : "")">All</a>
+        <a href="/User/Workouts?type=strength" class="filter-chip @(ViewBag.FilterType == "strength" ? "active" : "")">Strength</a>
+        <a href="/User/Workouts?type=cardio" class="filter-chip @(ViewBag.FilterType == "cardio" ? "active" : "")">Cardio</a>
+        <a href="/User/Workouts?type=flexibility" class="filter-chip @(ViewBag.FilterType == "flexibility" ? "active" : "")">Flexibility</a>
+        <a href="/User/Workouts?type=sports" class="filter-chip @(ViewBag.FilterType == "sports" ? "active" : "")">Sports</a>
+    </div>
+
+    <!-- WORKOUT LIST -->
+    <div class="tracker-content">
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i data-lucide="dumbbell" size="48"></i>
+                <h3>No workouts logged yet</h3>
+                <p>Click "Log Workout" to add your first workout!</p>
+            </div>
+        }
+        else
+        {
+            <div class="workouts-grid">
+                @foreach (var w in Model)
+                {
+                    <div class="workout-card">
+                        <div class="workout-card-header">
+                            <div>
+                                <h3>@w.Title</h3>
+                                <span class="type-badge @w.WorkoutType">@w.WorkoutType</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="/User/EditWorkout/@w.Id" class="btn-icon-edit">
+                                    <i data-lucide="pencil" size="16"></i>
+                                </a>
+                                <form method="post" action="/User/DeleteWorkout" style="display:inline"
+                                      onsubmit="return confirm('Delete this workout?')">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@w.Id" />
+                                    <button type="submit" class="btn-icon-danger">
+                                        <i data-lucide="trash-2" size="16"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <p class="workout-desc">@w.Description</p>
+                        <div class="workout-details">
+                            <div class="detail-item"><i data-lucide="calendar" size="14"></i><span>@w.Date.ToString("MMM dd, yyyy")</span></div>
+                            <div class="detail-item"><i data-lucide="clock" size="14"></i><span>@w.DurationMinutes mins</span></div>
+                            <div class="detail-item"><i data-lucide="flame" size="14"></i><span>@w.CaloriesBurned cal</span></div>
+                        </div>
+                        @if (w.Sets.HasValue || w.Reps.HasValue || w.WeightKg.HasValue)
+                        {
+                            <div class="workout-stats">
+                                @if (w.Sets.HasValue)
+                                {
+                                    <div class="stat"><span class="stat-label">Sets</span><span class="stat-value">@w.Sets</span></div>
+                                }
+                                @if (w.Reps.HasValue)
+                                {
+                                    <div class="stat"><span class="stat-label">Reps</span><span class="stat-value">@w.Reps</span></div>
+                                }
+                                @if (w.WeightKg.HasValue)
+                                {
+                                    <div class="stat"><span class="stat-label">Weight</span><span class="stat-value">@w.WeightKg kg</span></div>
+                                }
+                            </div>
+                        }
+                        @if (!string.IsNullOrEmpty(w.Notes))
+                        {
+                            <p class="workout-notes">📝 @w.Notes</p>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+        const addBtn = document.getElementById('add-workout-btn');
+        const cancelBtn = document.getElementById('cancel-btn');
+        const form = document.getElementById('workout-form');
+
+        addBtn.addEventListener('click', () => {
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+            form.scrollIntoView({ behavior: 'smooth' });
+        });
+        cancelBtn?.addEventListener('click', () => { form.style.display = 'none'; });
+
+        // Show/hide strength fields based on type
+        const typeSelect = document.querySelector('select[name="WorkoutType"]');
+        const strengthFields = document.getElementById('strength-fields');
+        function toggleFields() {
+            strengthFields.style.display = typeSelect.value === 'strength' ? 'grid' : 'none';
+        }
+        typeSelect?.addEventListener('change', toggleFields);
+        toggleFields();
+    </script>
+}

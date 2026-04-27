@@ -1,0 +1,42 @@
+@model FitnessAppMVC.Models.FitnessService
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Delete Service";
+}
+
+<div class="admin-data-container narrow">
+    <div class="header-with-action">
+        <div>
+            <h1 class="page-title text-danger">Delete Service</h1>
+            <p class="page-subtitle">Are you sure you want to delete this service?</p>
+        </div>
+        <a asp-action="Index" class="btn-outline">Cancel</a>
+    </div>
+
+    <div class="data-card delete-card">
+        <div class="delete-confirmation-content">
+            <div class="service-preview mb-6 p-4 rounded-lg bg-red-50/5 text-center">
+                <div class="icon-wrap mb-4 inline-flex items-center justify-center p-3 rounded-xl bg-red-500/10 text-red-500">
+                     <i data-lucide="@Model.IconName" size="32"></i>
+                </div>
+                <h3>@Model.Title</h3>
+                <p class="opacity-70">@Model.Description</p>
+            </div>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="Id" />
+                <div class="alert variant-danger mb-6">
+                    <p><strong>Warning:</strong> This action cannot be undone. This service will be immediately removed from the public website.</p>
+                </div>
+                <button type="submit" class="btn-primary danger w-full">Confirm Deletion</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+    </script>
+}

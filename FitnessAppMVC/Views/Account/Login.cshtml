@@ -1,0 +1,111 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Login";
+}
+
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <i data-lucide="heart" fill="#6366f1" color="#6366f1" size="40"></i>
+            <h1>FitTrack</h1>
+            <p>Welcome back! Sign in to your account</p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-error">
+                <i data-lucide="alert-circle" size="18"></i>
+                <span>@ViewBag.Error</span>
+            </div>
+        }
+
+        @if (TempData["Success"] != null)
+        {
+            <div class="alert alert-success">
+                <i data-lucide="check-circle" size="18"></i>
+                <span>@TempData["Success"]</span>
+            </div>
+        }
+
+        <form method="post" action="/Account/Login" id="login-form">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-icon-wrap">
+                    <i data-lucide="mail" size="18" class="input-icon"></i>
+                    <input type="email" id="email" name="email" placeholder="you@example.com"
+                           autocomplete="email" required class="form-input" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">
+                    Password
+                    <a href="/Account/ForgotPassword" class="forgot-link">Forgot password?</a>
+                </label>
+                <div class="input-icon-wrap">
+                    <i data-lucide="lock" size="18" class="input-icon"></i>
+                    <input type="password" id="password" name="password" placeholder="••••••••"
+                           autocomplete="current-password" required class="form-input" />
+                    <button type="button" class="toggle-pw" id="toggle-pw" aria-label="Toggle password">
+                        <i data-lucide="eye" size="18" id="pw-icon"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group form-check">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="rememberMe" value="true" id="remember" />
+                    <span>Remember me for 24 hours</span>
+                </label>
+            </div>
+
+            <button type="submit" class="btn-auth" id="login-btn">
+                <i data-lucide="log-in" size="20"></i>
+                Sign In
+            </button>
+        </form>
+
+        <div class="auth-divider"><span>Demo Accounts</span></div>
+
+        <div class="demo-accounts">
+            <button class="demo-btn" onclick="fillDemo('admin@fittrack.com','Admin@123')">
+                <i data-lucide="shield" size="16"></i> Admin Login
+            </button>
+            <button class="demo-btn" onclick="fillDemo('user@fittrack.com','User@123')">
+                <i data-lucide="user" size="16"></i> User Login
+            </button>
+        </div>
+
+        <p class="auth-footer">
+            Don't have an account? <a href="/Account/Register">Create one free</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+
+        // Toggle password visibility
+        document.getElementById('toggle-pw').addEventListener('click', function () {
+            const pw = document.getElementById('password');
+            const icon = document.getElementById('pw-icon');
+            if (pw.type === 'password') {
+                pw.type = 'text';
+                icon.setAttribute('data-lucide', 'eye-off');
+            } else {
+                pw.type = 'password';
+                icon.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        });
+
+        function fillDemo(email, password) {
+            document.getElementById('email').value = email;
+            document.getElementById('password').value = password;
+        }
+    </script>
+}

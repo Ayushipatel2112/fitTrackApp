@@ -1,0 +1,170 @@
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="home-page">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i data-lucide="heart" fill="#60a5fa" color="#60a5fa" size="32"></i>
+                <span>FitTrack</span>
+            </div>
+
+            <div class="nav-menu" aria-label="Primary">
+                <a href="/" class="nav-link active">Home</a>
+                <a href="/Home/Services" class="nav-link">Services</a>
+                <a href="/Home/Blog" class="nav-link">Blog</a>
+                <a href="/Home/Contact" class="nav-link">Contact</a>
+            </div>
+
+            <div class="nav-links nav-actions">
+                <a href="/Account/Login" class="btn-outline">Login</a>
+                <a href="/Account/Register" class="btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="hero-section">
+        <div class="container">
+            <div class="hero-content">
+                <p class="hero-kicker">
+                    <i data-lucide="sparkles" size="16"></i>
+                    Built for real progress, not guesswork
+                </p>
+                <h1 class="hero-title">
+                    Train Smarter. <br />
+                    Feel Better Every Week.
+                </h1>
+                <p class="hero-subtitle">
+                    FitTrack combines workout planning, nutrition logging, and progress analytics into one experience
+                    so you can stay consistent and see measurable results.
+                </p>
+                <div class="hero-buttons">
+                    <a href="/Account/Register" class="btn-large btn-primary">
+                        Start Free Trial
+                    </a>
+                    <a href="/Account/Login" class="btn-large btn-outline">
+                        Sign In
+                    </a>
+                </div>
+
+                <div class="hero-stats" aria-label="FitTrack highlights">
+                    <div class="hero-stat-card">
+                        <strong>120K+</strong>
+                        <span>Workouts Logged Weekly</span>
+                    </div>
+                    <div class="hero-stat-card">
+                        <strong>4.9/5</strong>
+                        <span>Average Member Rating</span>
+                    </div>
+                    <div class="hero-stat-card">
+                        <strong>35%</strong>
+                        <span>Faster Goal Completion</span>
+                    </div>
+                    <div class="hero-stat-card">
+                        <strong>24/7</strong>
+                        <span>Progress Insights</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-image">
+                <div class="hero-illustration">
+                    <i data-lucide="zap" size="200" class="icon-primary"></i>
+                </div>
+                <div class="hero-floating-card">
+                    <p>Weekly streak</p>
+                    <strong>6 sessions completed</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="proof-section">
+        <div class="container">
+            <p class="proof-line">
+                Trusted by students, professionals, and athletes building healthier routines every day.
+            </p>
+        </div>
+    </section>
+
+    <section class="features-section">
+        <div class="container">
+            <h2 class="section-title">Everything You Need to Succeed</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="heart" size="40" fill="#60a5fa" color="#60a5fa"></i></div>
+                    <h3>Track Your Workouts</h3>
+                    <p>Log your exercises, sets, reps, and progress with ease</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="target" size="40"></i></div>
+                    <h3>Set Goals</h3>
+                    <p>Define your fitness goals and track your journey</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="trending-up" size="40"></i></div>
+                    <h3>Monitor Progress</h3>
+                    <p>Visualize your improvements with detailed charts and stats</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon"><i data-lucide="users" size="40"></i></div>
+                    <h3>Nutrition Tracking</h3>
+                    <p>Track your meals, calories, and macros to optimize your diet</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="journey-section">
+        <div class="container">
+            <h2 class="section-title">How FitTrack Keeps You Moving</h2>
+            <div class="journey-grid">
+                <article class="journey-card">
+                    <div class="journey-icon"><i data-lucide="clock-3" size="24"></i></div>
+                    <h3>Plan in Minutes</h3>
+                    <p>Set your target and generate a weekly routine tailored to your schedule.</p>
+                </article>
+                <article class="journey-card">
+                    <div class="journey-icon"><i data-lucide="smartphone" size="24"></i></div>
+                    <h3>Track Anywhere</h3>
+                    <p>Log workouts, meals, and sleep in one flow from any device without friction.</p>
+                </article>
+                <article class="journey-card">
+                    <div class="journey-icon"><i data-lucide="shield-check" size="24"></i></div>
+                    <h3>Improve with Clarity</h3>
+                    <p>See what works with smart summaries, streak alerts, and trend-based guidance.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Transform Your Fitness?</h2>
+            <p>Join thousands of users achieving their fitness goals</p>
+            <a href="/Account/Register" class="btn-large btn-primary">
+                Create Free Account
+            </a>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/Home/Services">Services</a>
+                <a href="/Home/Blog">Blog</a>
+                <a href="/Home/Contact">Contact</a>
+            </div>
+            <p>&copy; 2026 FitTrack. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+@section Scripts {
+    <script>
+        // Any page-specific scripts can go here
+        lucide.createIcons();
+    </script>
+}

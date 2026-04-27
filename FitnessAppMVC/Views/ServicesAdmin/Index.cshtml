@@ -1,0 +1,65 @@
+@model IEnumerable<FitnessAppMVC.Models.FitnessService>
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Manage Services";
+}
+
+<div class="admin-data-container">
+    <div class="header-with-action">
+        <div>
+            <h1 class="page-title">Manage Fitness Services</h1>
+            <p class="page-subtitle">Add, edit or remove services offered on the main site.</p>
+        </div>
+        <a asp-action="Create" class="btn-primary">
+            <i data-lucide="plus"></i> Add New Service
+        </a>
+    </div>
+
+    <div class="data-card">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Icon</th>
+                    <th>Title</th>
+                    <th>Description</th>
+                    <th class="text-right">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="icon-cell">
+                            <i data-lucide="@item.IconName"></i>
+                        </td>
+                        <td class="font-bold">@item.Title</td>
+                        <td class="description-cell">@item.Description</td>
+                        <td class="text-right actions-cell">
+                            <a asp-action="Edit" asp-route-id="@item.Id" class="btn-icon" title="Edit">
+                                <i data-lucide="edit-3"></i>
+                            </a>
+                            <a asp-action="Delete" asp-route-id="@item.Id" class="btn-icon delete" title="Delete">
+                                <i data-lucide="trash-2"></i>
+                            </a>
+                        </td>
+                    </tr>
+                }
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="4" class="text-center py-8 opacity-50">
+                            No services found. Click "Add New Service" to get started.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+    </script>
+}

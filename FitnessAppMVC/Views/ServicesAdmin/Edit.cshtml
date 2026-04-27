@@ -1,0 +1,49 @@
+@model FitnessAppMVC.Models.FitnessService
+
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Edit Service";
+}
+
+<div class="admin-data-container narrow">
+    <div class="header-with-action">
+        <div>
+            <h1 class="page-title">Edit Service</h1>
+            <p class="page-subtitle">Update details for '@Model.Title'</p>
+        </div>
+        <a asp-action="Index" class="btn-outline">Back to List</a>
+    </div>
+
+    <div class="data-card form-card">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            
+            <div class="form-group">
+                <label asp-for="Title" class="form-label"></label>
+                <input asp-for="Title" class="form-input" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Description" class="form-label"></label>
+                <textarea asp-for="Description" class="form-input" rows="4"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="IconName" class="form-label">Icon Name (Lucide)</label>
+                <input asp-for="IconName" class="form-input" />
+                <span asp-validation-for="IconName" class="text-danger"></span>
+            </div>
+
+            <div class="form-actions text-center mt-6">
+                <button type="submit" class="btn-primary w-full">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

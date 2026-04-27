@@ -1,0 +1,92 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Audit Logs";
+}
+
+<div class="admin-container">
+    <div class="admin-header admin-page-header">
+        <div>
+            <h1>Audit Logs</h1>
+            <p>Track all user and admin activities</p>
+        </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="admin-card">
+        <form method="get" action="/Admin/AuditLogs" class="search-bar">
+            <div class="input-icon-wrap">
+                <i data-lucide="filter" size="18" class="input-icon"></i>
+                <input type="text" name="filter" value="@ViewBag.Filter"
+                       placeholder="Filter by action or email..." class="form-input" />
+            </div>
+            <button type="submit" class="btn-primary">Filter</button>
+            @if (!string.IsNullOrEmpty(ViewBag.Filter as string))
+            {
+                <a href="/Admin/AuditLogs" class="btn-outline">Clear</a>
+            }
+        </form>
+    </div>
+
+    <div class="admin-card">
+        <div class="card-header">
+            <h2>Activity Log <span class="badge-count">@ViewBag.Total entries</span></h2>
+        </div>
+        <div class="users-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Action</th>
+                        <th>User</th>
+                        <th>Details</th>
+                        <th>IP Address</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var logs = ViewBag.Logs as List<FitnessAppMVC.Models.AuditLog>;
+                        int rowNum = ((ViewBag.Page - 1) * ViewBag.PageSize) + 1;
+                    }
+                    @if (logs != null && logs.Any())
+                    {
+                        @foreach (var log in logs)
+                        {
+                            <tr>
+                                <td>@rowNum++</td>
+                                <td>
+                                    <span class="log-action-badge">@log.Action</span>
+                                </td>
+                                <td>@(log.UserEmail ?? "System")</td>
+                                <td class="text-muted">@(log.Details ?? "-")</td>
+                                <td>@(log.IpAddress ?? "-")</td>
+                                <td>@log.Timestamp.ToString("MMM dd, yyyy HH:mm")</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="6" class="empty-row">No audit logs found.</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <!-- PAGINATION -->
+        @if (ViewBag.Total > ViewBag.PageSize)
+        {
+            var totalPages = (int)Math.Ceiling((double)ViewBag.Total / ViewBag.PageSize);
+            <div class="pagination">
+                @for (int p = 1; p <= totalPages; p++)
+                {
+                    <a href="/Admin/AuditLogs?page=@p&filter=@ViewBag.Filter"
+                       class="page-btn @(ViewBag.Page == p ? "active" : "")">@p</a>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

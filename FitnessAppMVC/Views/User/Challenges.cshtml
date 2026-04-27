@@ -1,0 +1,67 @@
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Fitness Challenges";
+}
+
+<link rel="stylesheet" href="~/css/UserPages.css" asp-append-version="true" />
+
+<div class="page-container">
+    <div class="page-header">
+        <h1>🏆 Fitness Challenges</h1>
+        <p>Complete challenges, earn points, and climb the leaderboard!</p>
+    </div>
+
+    <div class="challenge-overview-grid">
+        <div class="challenge-overview-card">
+            <span class="overview-label">Completed</span>
+            <strong>3</strong>
+        </div>
+        <div class="challenge-overview-card">
+            <span class="overview-label">In Progress</span>
+            <strong>2</strong>
+        </div>
+        <div class="challenge-overview-card">
+            <span class="overview-label">Points Earned</span>
+            <strong>450</strong>
+        </div>
+    </div>
+
+    <div class="challenges-grid">
+        <div class="challenge-card">
+            <div class="challenge-header">
+                <span class="challenge-icon">🔥</span>
+                <span class="challenge-difficulty" style="background-color: #10b981">Easy</span>
+            </div>
+            <h3>7-Day Streak</h3>
+            <p class="challenge-description">Log a workout every day for 7 consecutive days.</p>
+            <div class="challenge-stats">
+                <div class="stat"><span class="label">Target:</span><span class="value">7 Days</span></div>
+                <div class="stat"><span class="label">Reward:</span><span class="value gold">100 pts</span></div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar"><div class="progress-fill" style="width: 71.4%"></div></div>
+                <span class="progress-text">5 / 7 Days</span>
+            </div>
+        </div>
+
+        <div class="challenge-card">
+            <div class="challenge-header">
+                <span class="challenge-icon">💪</span>
+                <span class="challenge-difficulty" style="background-color: #f59e0b">Medium</span>
+            </div>
+            <h3>Heavy Lifter</h3>
+            <p class="challenge-description">Complete 15 strength training sessions.</p>
+            <div class="challenge-stats">
+                <div class="stat"><span class="label">Target:</span><span class="value">15 Sessions</span></div>
+                <div class="stat"><span class="label">Reward:</span><span class="value gold">250 pts</span></div>
+            </div>
+            <button class="btn-primary challenge-btn">Start Challenge</button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+    </script>
+}

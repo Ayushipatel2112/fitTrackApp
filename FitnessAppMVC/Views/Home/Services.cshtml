@@ -1,0 +1,115 @@
+@model IEnumerable<FitnessAppMVC.Models.FitnessService>
+@{
+    ViewData["Title"] = "Services";
+}
+
+<div class="home-page marketing-page">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i data-lucide="heart" fill="#60a5fa" color="#60a5fa" size="32"></i>
+                <span>FitTrack</span>
+            </div>
+
+            <div class="nav-menu" aria-label="Primary">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/Home/Services" class="nav-link active">Services</a>
+                <a href="/Home/Blog" class="nav-link">Blog</a>
+                <a href="/Home/Contact" class="nav-link">Contact</a>
+            </div>
+
+            <div class="nav-links nav-actions">
+                <a href="/Account/Login" class="btn-outline">Login</a>
+                <a href="/Account/Register" class="btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="marketing-hero">
+        <div class="container">
+            <p class="hero-kicker">
+                <i data-lucide="sparkles" color="#60a5fa" stroke-width="2" size="16"></i>
+                Services built for consistency and results
+            </p>
+            <h1 class="hero-title">Everything You Need In One Fitness Platform</h1>
+            <p class="marketing-subtitle">
+                From planning workouts to analyzing progress, FitTrack gives you a complete system to train
+                smarter and stay accountable.
+            </p>
+        </div>
+    </section>
+
+    <section class="services-section">
+        <div class="container">
+            <div class="services-grid">
+                @if (Model != null && Model.Any())
+                {
+                    @foreach (var service in Model)
+                    {
+                        <article class="service-card">
+                            <div class="service-icon"><i data-lucide="@service.IconName" size="24"></i></div>
+                            <h3>@service.Title</h3>
+                            <p>@service.Description</p>
+                        </article>
+                    }
+                }
+                else
+                {
+                    <article class="service-card">
+                        <div class="service-icon"><i data-lucide="dumbbell" size="24"></i></div>
+                        <h3>Workout Planner</h3>
+                        <p>Build routines, log sets and reps, and track strength progress with clean weekly views.</p>
+                    </article>
+                    <article class="service-card">
+                        <div class="service-icon"><i data-lucide="utensils" size="24"></i></div>
+                        <h3>Nutrition Tracking</h3>
+                        <p>Record meals, calories, and macros to stay aligned with your training goals.</p>
+                    </article>
+                    <article class="service-card">
+                        <div class="service-icon"><i data-lucide="moon" size="24"></i></div>
+                        <h3>Sleep Insights</h3>
+                        <p>Measure recovery quality and sleep consistency to improve performance and energy.</p>
+                    </article>
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="pricing-strip">
+        <div class="container">
+            <div class="pricing-card">
+                <h2>Start Free. Scale Your Routine.</h2>
+                <p>
+                    Create your account and access core planning, tracking, and analytics from day one.
+                </p>
+                <ul class="plan-points">
+                    <li><i data-lucide="check-circle-2" size="18"></i><span>Personalized fitness dashboard</span></li>
+                    <li><i data-lucide="check-circle-2" size="18"></i><span>Workout, meal, and sleep management</span></li>
+                    <li><i data-lucide="check-circle-2" size="18"></i><span>Progress charts and habit streak visibility</span></li>
+                    <li><i data-lucide="check-circle-2" size="18"></i><span>Admin tools for user and tracking data management</span></li>
+                </ul>
+                <a href="/Account/Register" class="btn-large btn-primary">
+                    Create Account <i data-lucide="arrow-right" size="18"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/Home/Services">Services</a>
+                <a href="/Home/Blog">Blog</a>
+                <a href="/Home/Contact">Contact</a>
+            </div>
+            <p>&copy; 2026 FitTrack. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+    </script>
+}

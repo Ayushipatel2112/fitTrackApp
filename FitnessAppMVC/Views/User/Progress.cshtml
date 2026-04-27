@@ -1,0 +1,219 @@
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Progress Tracker";
+}
+
+<link rel="stylesheet" href="~/css/Progress.css" asp-append-version="true" />
+
+<div class="progress-container">
+    <div class="progress-header">
+        <div>
+            <h1><i data-lucide="trending-up" size="32"></i> Progress Tracker</h1>
+            <p>Monitor your fitness journey and achievements</p>
+        </div>
+        <div class="time-range-selector">
+            <label>Time Range:</label>
+            <select>
+                <option value="7">Last 7 Days</option>
+                <option value="14">Last 14 Days</option>
+                <option value="30">Last 30 Days</option>
+                <option value="90">Last 90 Days</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="progress-stats-grid">
+        <div class="progress-stat-card">
+            <div class="stat-icon" style="background-color: #6366f120; color: #6366f1">
+                <i data-lucide="target" size="24"></i>
+            </div>
+            <div>
+                <p class="stat-label">Total Workouts</p>
+                <h3 class="stat-value">12</h3>
+            </div>
+        </div>
+        <div class="progress-stat-card">
+            <div class="stat-icon" style="background-color: #22c55e20; color: #22c55e">
+                <i data-lucide="trending-up" size="24"></i>
+            </div>
+            <div>
+                <p class="stat-label">Calories Burned</p>
+                <h3 class="stat-value">4,250</h3>
+            </div>
+        </div>
+        <div class="progress-stat-card">
+            <div class="stat-icon" style="background-color: #f59e0b20; color: #f59e0b">
+                <i data-lucide="calendar" size="24"></i>
+            </div>
+            <div>
+                <p class="stat-label">Average Sleep</p>
+                <h3 class="stat-value">7.8 hrs</h3>
+            </div>
+        </div>
+        <div class="progress-stat-card">
+            <div class="stat-icon" style="background-color: #8b5cf620; color: #8b5cf6">
+                <i data-lucide="award" size="24"></i>
+            </div>
+            <div>
+                <p class="stat-label">Meals Logged</p>
+                <h3 class="stat-value">48</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="charts-grid">
+        <div class="chart-card">
+            <h2>Daily Workout Activity</h2>
+            <div class="chart-container-wrapper">
+                <canvas id="workoutChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-card">
+            <h2>Calorie Balance</h2>
+            <div class="chart-container-wrapper">
+                <canvas id="calorieChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .chart-container-wrapper {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            padding: 1rem;
+            background: #ffffff;
+            border-radius: 12px;
+        }
+        .chart-card h2 {
+            padding: 1.25rem 1.25rem 0.5rem;
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+    </style>
+
+    <div class="achievements-section">
+        <h2>Achievements</h2>
+        <div class="achievements-grid">
+            <div class="achievement-card">
+                <div class="achievement-icon"><i data-lucide="target" size="24"></i></div>
+                <div class="achievement-content">
+                    <h3>Workout Warrior</h3>
+                    <p>Complete 10 workouts</p>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div>
+                    <span class="progress-text">100%</span>
+                </div>
+            </div>
+            <div class="achievement-card">
+                <div class="achievement-icon"><i data-lucide="award" size="24"></i></div>
+                <div class="achievement-content">
+                    <h3>Nutrition Master</h3>
+                    <p>Log 30 meals</p>
+                    <div class="progress-bar"><div class="progress-fill" style="width: 80%"></div></div>
+                    <span class="progress-text">80%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        lucide.createIcons();
+
+        // ─── Workout Activity Chart ───
+        const workoutCtx = document.getElementById('workoutChart').getContext('2d');
+        const workoutGradient = workoutCtx.createLinearGradient(0, 0, 0, 300);
+        workoutGradient.addColorStop(0, 'rgba(99, 102, 241, 0.4)');
+        workoutGradient.addColorStop(1, 'rgba(99, 102, 241, 0.0)');
+
+        new Chart(workoutCtx, {
+            type: 'line',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [{
+                    label: 'Minutes',
+                    data: [45, 60, 30, 0, 90, 120, 45],
+                    borderColor: '#6366f1',
+                    borderWidth: 3,
+                    backgroundColor: workoutGradient,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#ffffff',
+                    pointBorderColor: '#6366f1',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+
+        // ─── Calorie Balance Chart ───
+        const calorieCtx = document.getElementById('calorieChart').getContext('2d');
+        new Chart(calorieCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                datasets: [
+                    {
+                        label: 'Consumed',
+                        data: [2100, 2300, 2000, 2500, 2200, 2800, 2400],
+                        backgroundColor: '#6366f1',
+                        borderRadius: 6
+                    },
+                    {
+                        label: 'Burned',
+                        data: [1800, 2100, 1900, 2000, 2400, 2600, 2000],
+                        backgroundColor: '#fbbf24',
+                        borderRadius: 6
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            usePointStyle: true,
+                            padding: 20,
+                            font: { size: 12, weight: '500' }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: { color: '#f1f5f9' },
+                        ticks: { color: '#94a3b8' }
+                    },
+                    x: {
+                        grid: { display: false },
+                        ticks: { color: '#94a3b8' }
+                    }
+                }
+            }
+        });
+    </script>
+}

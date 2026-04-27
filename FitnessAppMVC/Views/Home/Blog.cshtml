@@ -1,0 +1,109 @@
+@model List<FitnessAppMVC.Models.BlogPost>
+@{
+    ViewData["Title"] = "Blog";
+}
+
+<div class="home-page marketing-page blog-page">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i data-lucide="heart" fill="#60a5fa" color="#60a5fa" size="32"></i>
+                <span>FitTrack</span>
+            </div>
+
+            <div class="nav-menu" aria-label="Primary">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/Home/Services" class="nav-link">Services</a>
+                <a href="/Home/Blog" class="nav-link active">Blog</a>
+                <a href="/Home/Contact" class="nav-link">Contact</a>
+            </div>
+
+            <div class="nav-links nav-actions">
+                <a href="/Account/Login" class="btn-outline">Login</a>
+                <a href="/Account/Register" class="btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="marketing-hero blog-hero">
+        <div class="container">
+            <p class="hero-kicker">
+                <i data-lucide="sparkles" size="16"></i>
+                Insights, guides, and practical fitness tips
+            </p>
+            <h1 class="hero-title">FitTrack Blog</h1>
+            <p class="marketing-subtitle">
+                Read actionable articles on training, nutrition, recovery, and consistency to help you build
+                better habits and hit your goals faster.
+            </p>
+        </div>
+    </section>
+
+    <section class="blog-section">
+        <div class="container">
+            <div class="blog-grid">
+                @foreach (var post in Model)
+                {
+                    <article class="blog-card">
+                        <div class="blog-card-top">
+                            <span class="blog-category">
+                                <i data-lucide="book-open" size="15"></i>
+                                @post.Category
+                            </span>
+                            <span class="blog-readtime">
+                                <i data-lucide="clock-3" size="15"></i>
+                                @post.ReadTime
+                            </span>
+                        </div>
+
+                        <h3>@post.Title</h3>
+                        <p>@post.Excerpt</p>
+
+                        <div class="blog-meta">
+                            <span>
+                                <i data-lucide="user" size="14"></i>
+                                @post.Author
+                            </span>
+                            <span>
+                                <i data-lucide="calendar" size="14"></i>
+                                @post.Date
+                            </span>
+                        </div>
+
+                        <a href="/Home/BlogArticle/@post.Id" class="blog-link-btn">
+                            Read Article <i data-lucide="arrow-right" size="16"></i>
+                        </a>
+                    </article>
+                }
+            </div>
+
+            <div class="blog-cta-card">
+                <h2>Want Personalized Fitness Guidance?</h2>
+                <p>
+                    Create a free FitTrack account to track your workouts, meals, sleep, and progress in one place.
+                </p>
+                <a href="/Account/Register" class="btn-large btn-primary">
+                    Start Free Trial
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/Home/Services">Services</a>
+                <a href="/Home/Blog">Blog</a>
+                <a href="/Home/Contact">Contact</a>
+            </div>
+            <p>&copy; 2026 FitTrack. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+    </script>
+}

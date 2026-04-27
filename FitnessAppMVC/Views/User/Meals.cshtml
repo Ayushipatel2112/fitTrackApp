@@ -1,0 +1,191 @@
+@model IEnumerable<FitnessAppMVC.Models.Meal>
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Meal Planner";
+}
+
+<link rel="stylesheet" href="~/css/Tracker.css" asp-append-version="true" />
+
+<div class="tracker-container">
+    <div class="tracker-header">
+        <div>
+            <h1><i data-lucide="utensils" size="32"></i> Meal Planner</h1>
+            <p>Track your daily nutrition</p>
+        </div>
+        <button class="btn-primary" id="add-meal-btn">
+            <i data-lucide="plus" size="20"></i> Log Meal
+        </button>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success"><i data-lucide="check-circle" size="18"></i> @TempData["Success"]</div>
+    }
+
+    <!-- TODAY SUMMARY -->
+    <div class="summary-bar">
+        <div class="summary-item">
+            <span class="summary-label">Today's Calories</span>
+            <span class="summary-value" style="color:#f59e0b">@ViewBag.TodayCalories kcal</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Today's Protein</span>
+            <span class="summary-value" style="color:#6366f1">@ViewBag.TodayProtein g</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Total Entries</span>
+            <span class="summary-value" style="color:#22c55e">@Model.Count()</span>
+        </div>
+    </div>
+
+    <!-- ADD MEAL FORM -->
+    <div class="form-card" id="meal-form" style="display:none;">
+        <h2>Log New Meal</h2>
+        <form method="post" action="/User/AddMeal">
+            @Html.AntiForgeryToken()
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Meal Name *</label>
+                    <input type="text" name="MealName" placeholder="e.g., Grilled Chicken Salad" required />
+                </div>
+                <div class="form-group">
+                    <label>Meal Type *</label>
+                    <select name="MealType">
+                        <option value="Breakfast">Breakfast</option>
+                        <option value="Lunch">Lunch</option>
+                        <option value="Dinner">Dinner</option>
+                        <option value="Snack">Snack</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Calories *</label>
+                    <input type="number" name="Calories" min="0" max="10000" value="0" required />
+                </div>
+                <div class="form-group">
+                    <label>Protein (g)</label>
+                    <input type="number" name="Protein" min="0" step="0.1" placeholder="0" />
+                </div>
+                <div class="form-group">
+                    <label>Carbs (g)</label>
+                    <input type="number" name="Carbs" min="0" step="0.1" placeholder="0" />
+                </div>
+                <div class="form-group">
+                    <label>Fat (g)</label>
+                    <input type="number" name="Fat" min="0" step="0.1" placeholder="0" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date & Time</label>
+                    <input type="datetime-local" name="LoggedAt" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <input type="text" name="Notes" placeholder="Optional notes..." />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit"><i data-lucide="save" size="18"></i> Save Meal</button>
+                <button type="button" class="btn-cancel" id="cancel-meal-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-bar">
+        <a href="/User/Meals" class="filter-chip @(ViewBag.FilterType == null ? "active" : "")">All</a>
+        <a href="/User/Meals?mealType=Breakfast" class="filter-chip @(ViewBag.FilterType == "Breakfast" ? "active" : "")">Breakfast</a>
+        <a href="/User/Meals?mealType=Lunch" class="filter-chip @(ViewBag.FilterType == "Lunch" ? "active" : "")">Lunch</a>
+        <a href="/User/Meals?mealType=Dinner" class="filter-chip @(ViewBag.FilterType == "Dinner" ? "active" : "")">Dinner</a>
+        <a href="/User/Meals?mealType=Snack" class="filter-chip @(ViewBag.FilterType == "Snack" ? "active" : "")">Snack</a>
+    </div>
+
+    <!-- MEAL LIST -->
+    <div class="tracker-content">
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i data-lucide="utensils" size="48"></i>
+                <h3>No meals logged yet</h3>
+                <p>Click "Log Meal" to start tracking your nutrition!</p>
+            </div>
+        }
+        else
+        {
+            <div class="meals-grid">
+                @foreach (var meal in Model)
+                {
+                    <div class="meal-card">
+                        <div class="meal-card-header">
+                            <div>
+                                <h3>@meal.MealName</h3>
+                                <span class="meal-type-badge">@meal.MealType</span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="/User/EditMeal/@meal.Id" class="btn-icon-edit">
+                                    <i data-lucide="pencil" size="16"></i>
+                                </a>
+                                <form method="post" action="/User/DeleteMeal" style="display:inline"
+                                      onsubmit="return confirm('Delete this meal?')">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@meal.Id" />
+                                    <button type="submit" class="btn-icon-danger">
+                                        <i data-lucide="trash-2" size="16"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="meal-macros">
+                            <div class="macro-item">
+                                <span class="macro-value calories">@meal.Calories</span>
+                                <span class="macro-label">kcal</span>
+                            </div>
+                            @if (meal.Protein.HasValue)
+                            {
+                                <div class="macro-item">
+                                    <span class="macro-value protein">@meal.Protein g</span>
+                                    <span class="macro-label">protein</span>
+                                </div>
+                            }
+                            @if (meal.Carbs.HasValue)
+                            {
+                                <div class="macro-item">
+                                    <span class="macro-value carbs">@meal.Carbs g</span>
+                                    <span class="macro-label">carbs</span>
+                                </div>
+                            }
+                            @if (meal.Fat.HasValue)
+                            {
+                                <div class="macro-item">
+                                    <span class="macro-value fat">@meal.Fat g</span>
+                                    <span class="macro-label">fat</span>
+                                </div>
+                            }
+                        </div>
+                        <p class="meal-time"><i data-lucide="clock" size="13"></i> @meal.LoggedAt.ToString("MMM dd, hh:mm tt")</p>
+                        @if (!string.IsNullOrEmpty(meal.Notes))
+                        {
+                            <p class="meal-notes">📝 @meal.Notes</p>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+        document.getElementById('add-meal-btn').addEventListener('click', () => {
+            const f = document.getElementById('meal-form');
+            f.style.display = f.style.display === 'none' ? 'block' : 'none';
+            f.scrollIntoView({ behavior: 'smooth' });
+        });
+        document.getElementById('cancel-meal-btn').addEventListener('click', () => {
+            document.getElementById('meal-form').style.display = 'none';
+        });
+    </script>
+}

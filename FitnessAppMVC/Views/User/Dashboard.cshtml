@@ -1,0 +1,140 @@
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Dashboard";
+}
+
+<link rel="stylesheet" href="~/css/Dashboard.css" asp-append-version="true" />
+
+<div class="dashboard-container">
+    <div class="dashboard-header">
+        <div>
+            <h1>Welcome back, @ViewBag.UserName! 👋</h1>
+            <p>Here's your fitness overview for today</p>
+        </div>
+        <div class="quick-actions">
+            <a href="/User/Workouts" class="btn-icon-primary">
+                <i data-lucide="plus" size="20"></i> Log Workout
+            </a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success"><i data-lucide="check-circle" size="18"></i> @TempData["Success"]</div>
+    }
+
+    <!-- STATS GRID -->
+    <div class="stats-grid">
+        <a href="/User/Workouts" class="stat-card" style="border-left-color:#6366f1">
+            <div class="stat-icon" style="background-color:#6366f120;color:#6366f1">
+                <i data-lucide="dumbbell" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Total Workouts</p>
+                <h3 class="stat-value">@ViewBag.TotalWorkouts</h3>
+            </div>
+        </a>
+        <a href="/User/Meals" class="stat-card" style="border-left-color:#22c55e">
+            <div class="stat-icon" style="background-color:#22c55e20;color:#22c55e">
+                <i data-lucide="utensils" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Meals Logged</p>
+                <h3 class="stat-value">@ViewBag.TotalMeals</h3>
+            </div>
+        </a>
+        <a href="/User/Sleep" class="stat-card" style="border-left-color:#8b5cf6">
+            <div class="stat-icon" style="background-color:#8b5cf620;color:#8b5cf6">
+                <i data-lucide="moon" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Sleep Records</p>
+                <h3 class="stat-value">@ViewBag.TotalSleep</h3>
+            </div>
+        </a>
+        <a href="/User/Meals" class="stat-card" style="border-left-color:#f59e0b">
+            <div class="stat-icon" style="background-color:#f59e0b20;color:#f59e0b">
+                <i data-lucide="trending-up" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Today's Calories</p>
+                <h3 class="stat-value">@ViewBag.TodayCalories</h3>
+            </div>
+        </a>
+    </div>
+
+    <!-- RECENT WORKOUTS -->
+    <div class="dashboard-card">
+        <div class="card-header">
+            <h2>Recent Workouts</h2>
+            <a href="/User/Workouts" class="view-all-link">View All</a>
+        </div>
+        <div class="workout-list">
+            @{
+                var recentWorkouts = ViewBag.RecentWorkouts as List<FitnessAppMVC.Models.Workout>;
+            }
+            @if (recentWorkouts == null || !recentWorkouts.Any())
+            {
+                <div class="empty-mini">
+                    <p>No workouts yet. <a href="/User/Workouts">Log your first workout!</a></p>
+                </div>
+            }
+            else
+            {
+                @foreach (var w in recentWorkouts)
+                {
+                    <div class="workout-item">
+                        <div class="workout-info">
+                            <h4>@w.Title</h4>
+                            <p>@w.WorkoutType • @w.DurationMinutes mins • @w.Date.ToString("MMM dd")</p>
+                        </div>
+                        <div class="workout-stats">
+                            <span class="stat-badge">@w.CaloriesBurned cal</span>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- QUICK LINKS -->
+    <div class="quick-links-section">
+        <h2>Quick Links</h2>
+        <div class="quick-links-grid">
+            <a href="/User/Workouts" class="quick-link-card">
+                <i data-lucide="dumbbell" size="32"></i>
+                <h3>Workout Tracker</h3>
+                <p>Log and track your exercises</p>
+            </a>
+            <a href="/User/Meals" class="quick-link-card">
+                <i data-lucide="utensils" size="32"></i>
+                <h3>Meal Planner</h3>
+                <p>Track your nutrition</p>
+            </a>
+            <a href="/User/Sleep" class="quick-link-card">
+                <i data-lucide="moon" size="32"></i>
+                <h3>Sleep Tracker</h3>
+                <p>Monitor your sleep quality</p>
+            </a>
+            <a href="/User/Progress" class="quick-link-card">
+                <i data-lucide="target" size="32"></i>
+                <h3>Progress</h3>
+                <p>View your achievements</p>
+            </a>
+            <a href="/User/Leaderboard" class="quick-link-card">
+                <i data-lucide="award" size="32"></i>
+                <h3>Leaderboard</h3>
+                <p>See how you rank</p>
+            </a>
+            <a href="/User/Profile" class="quick-link-card">
+                <i data-lucide="user" size="32"></i>
+                <h3>My Profile</h3>
+                <p>Update your information</p>
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

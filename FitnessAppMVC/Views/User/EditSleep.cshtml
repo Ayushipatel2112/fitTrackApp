@@ -1,0 +1,62 @@
+@model FitnessAppMVC.Models.SleepRecord
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Edit Sleep Record";
+    string sQuality = Model.Quality ?? "Good";
+}
+<link rel="stylesheet" href="~/css/Tracker.css" asp-append-version="true" />
+
+<div class="tracker-container">
+    <div class="tracker-header">
+        <div>
+            <h1><i data-lucide="pencil" size="28"></i> Edit Sleep Record</h1>
+            <p>Update your sleep details</p>
+        </div>
+        <a href="/User/Sleep" class="btn-outline"><i data-lucide="arrow-left" size="18"></i> Back</a>
+    </div>
+
+    <div class="form-card">
+        <form method="post" action="/User/EditSleep/@Model.Id">
+            @Html.AntiForgeryToken()
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Sleep Date *</label>
+                    <input type="date" name="SleepDate" value="@Model.SleepDate.ToString("yyyy-MM-dd")" required />
+                </div>
+                <div class="form-group">
+                    <label>Bed Time *</label>
+                    <input type="time" name="BedTime" value="@Model.BedTime" required />
+                </div>
+                <div class="form-group">
+                    <label>Wake Time *</label>
+                    <input type="time" name="WakeTime" value="@Model.WakeTime" required />
+                </div>
+                <div class="form-group">
+                    <label>Hours Slept *</label>
+                    <input type="number" name="HoursSlept" value="@Model.HoursSlept" step="0.25" min="0" max="24" required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Sleep Quality *</label>
+                    @Html.DropDownList("Quality", new SelectList(
+                        new[] {
+                            new { Val="Excellent", Text="Excellent 😴" },
+                            new { Val="Good",      Text="Good 🙂" },
+                            new { Val="Fair",      Text="Fair 😐" },
+                            new { Val="Poor",      Text="Poor 😞" }
+                        }, "Val", "Text", sQuality))
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <input type="text" name="Notes" value="@Model.Notes" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit"><i data-lucide="save" size="18"></i> Update Record</button>
+                <a href="/User/Sleep" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {<script>lucide.createIcons();</script>}

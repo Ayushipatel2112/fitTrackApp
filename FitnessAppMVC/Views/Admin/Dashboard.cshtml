@@ -1,0 +1,164 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="admin-container">
+    <div class="admin-header admin-page-header">
+        <div>
+            <h1>Admin Dashboard</h1>
+            <p>Overview of your FitTrack application</p>
+        </div>
+        <div class="header-actions">
+            <a href="/BlogAdmin" class="btn-outline-sm"><i data-lucide="book-open" size="16"></i> Manage Blog</a>
+            <a href="/ServicesAdmin" class="btn-outline-sm"><i data-lucide="dumbbell" size="16"></i> Services</a>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success"><i data-lucide="check-circle" size="18"></i> @TempData["Success"]</div>
+    }
+
+    <!-- STATS GRID -->
+    <div class="stats-grid">
+        <div class="stat-card" style="border-left-color:#6366f1">
+            <div class="stat-icon" style="background-color:#6366f120;color:#6366f1">
+                <i data-lucide="users" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Total Users</p>
+                <h3 class="stat-value">@ViewBag.TotalUsers</h3>
+            </div>
+        </div>
+        <div class="stat-card" style="border-left-color:#22c55e">
+            <div class="stat-icon" style="background-color:#22c55e20;color:#22c55e">
+                <i data-lucide="user-check" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Active Users</p>
+                <h3 class="stat-value">@ViewBag.ActiveUsers</h3>
+            </div>
+        </div>
+        <div class="stat-card" style="border-left-color:#f59e0b">
+            <div class="stat-icon" style="background-color:#f59e0b20;color:#f59e0b">
+                <i data-lucide="activity" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Total Workouts</p>
+                <h3 class="stat-value">@ViewBag.TotalWorkouts</h3>
+            </div>
+        </div>
+        <div class="stat-card" style="border-left-color:#ef4444">
+            <div class="stat-icon" style="background-color:#ef444420;color:#ef4444">
+                <i data-lucide="mail" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Unread Messages</p>
+                <h3 class="stat-value">@ViewBag.UnreadMessages</h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-grid">
+        <!-- RECENT USERS -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h2>Recent Users</h2>
+                <a href="/Admin/Users" class="view-all-link">View All</a>
+            </div>
+            <div class="users-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var recentUsers = ViewBag.RecentUsers as List<Microsoft.AspNetCore.Identity.IdentityUser>;
+                        }
+                        @if (recentUsers != null)
+                        {
+                            @foreach (var u in recentUsers)
+                            {
+                                var initials = (u.Email?.Length > 0 ? u.Email[0].ToString().ToUpper() : "U");
+                                <tr>
+                                    <td>
+                                        <div class="user-cell">
+                                            <div class="user-avatar">@initials</div>
+                                            <span>@(u.Email?.Split('@')[0])</span>
+                                        </div>
+                                    </td>
+                                    <td>@u.Email</td>
+                                    <td>
+                                        <a href="/Admin/Users" class="btn-xs">View</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- RECENT AUDIT LOGS -->
+        <div class="admin-card">
+            <div class="card-header">
+                <h2>Recent Activity</h2>
+                <a href="/Admin/AuditLogs" class="view-all-link">View All</a>
+            </div>
+            <div class="log-list">
+                @{
+                    var logs = ViewBag.RecentLogs as List<FitnessAppMVC.Models.AuditLog>;
+                }
+                @if (logs != null)
+                {
+                    @foreach (var log in logs)
+                    {
+                        <div class="log-item">
+                            <div class="log-action">
+                                <i data-lucide="activity" size="14"></i>
+                                <span>@log.Action</span>
+                            </div>
+                            <div class="log-meta">
+                                <span class="log-user">@log.UserEmail</span>
+                                <span class="log-time">@log.Timestamp.ToString("MMM dd HH:mm")</span>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- QUICK MANAGEMENT LINKS -->
+    <div class="admin-grid" style="margin-top:1.5rem">
+        <a href="/ServicesAdmin" class="admin-quick-card">
+            <i data-lucide="dumbbell" size="32"></i>
+            <h3>Manage Services</h3>
+            <p>Add, edit, delete fitness services</p>
+        </a>
+        <a href="/BlogAdmin" class="admin-quick-card">
+            <i data-lucide="book-open" size="32"></i>
+            <h3>Manage Blog</h3>
+            <p>Create and edit blog posts</p>
+        </a>
+        <a href="/ContactAdmin" class="admin-quick-card">
+            <i data-lucide="mail" size="32"></i>
+            <h3>Contact Messages</h3>
+            <p>View and respond to messages</p>
+        </a>
+        <a href="/Admin/AuditLogs" class="admin-quick-card">
+            <i data-lucide="shield" size="32"></i>
+            <h3>Audit Logs</h3>
+            <p>Monitor all user activities</p>
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

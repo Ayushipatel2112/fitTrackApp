@@ -1,0 +1,22 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="auth-page">
+    <div class="auth-card" style="text-align:center;">
+        <div style="font-size:4rem;margin-bottom:1rem;">🚫</div>
+        <h1 style="color:#ef4444;font-size:1.5rem;">Access Denied</h1>
+        <p style="color:var(--text-secondary);">You don't have permission to view this page.</p>
+        <div style="margin-top:1.5rem;display:flex;gap:1rem;justify-content:center;">
+            <a href="/User/Dashboard" class="btn-primary">
+                <i data-lucide="arrow-left" size="18"></i> Go to Dashboard
+            </a>
+            <a href="/Account/Login" class="btn-outline">Login as Different User</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

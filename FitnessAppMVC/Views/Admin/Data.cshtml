@@ -1,0 +1,128 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "Data Management";
+}
+
+<div class="admin-container">
+    <div class="admin-header admin-page-header">
+        <div>
+            <h1>Data Management</h1>
+            <p>Overview of all application data</p>
+        </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card" style="border-left-color:#6366f1">
+            <div class="stat-icon" style="background-color:#6366f120;color:#6366f1">
+                <i data-lucide="dumbbell" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Total Workouts</p>
+                <h3 class="stat-value">@ViewBag.TotalWorkouts</h3>
+            </div>
+        </div>
+        <div class="stat-card" style="border-left-color:#22c55e">
+            <div class="stat-icon" style="background-color:#22c55e20;color:#22c55e">
+                <i data-lucide="utensils" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Meals Logged</p>
+                <h3 class="stat-value">@ViewBag.TotalMeals</h3>
+            </div>
+        </div>
+        <div class="stat-card" style="border-left-color:#8b5cf6">
+            <div class="stat-icon" style="background-color:#8b5cf620;color:#8b5cf6">
+                <i data-lucide="moon" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Sleep Records</p>
+                <h3 class="stat-value">@ViewBag.TotalSleep</h3>
+            </div>
+        </div>
+        <div class="stat-card" style="border-left-color:#f59e0b">
+            <div class="stat-icon" style="background-color:#f59e0b20;color:#f59e0b">
+                <i data-lucide="flame" size="24"></i>
+            </div>
+            <div class="stat-content">
+                <p class="stat-title">Total Calories Logged</p>
+                <h3 class="stat-value">@ViewBag.TotalCalories?.ToString("N0")</h3>
+            </div>
+        </div>
+    </div>
+
+    <!-- WORKOUT TYPE BREAKDOWN -->
+    <div class="admin-card">
+        <div class="card-header">
+            <h2>Workout Type Breakdown</h2>
+        </div>
+        <div class="type-breakdown">
+            @{
+                var stats = ViewBag.WorkoutStats as List<dynamic>;
+                string[] colors = { "#6366f1", "#22c55e", "#f59e0b", "#ef4444" };
+                int i = 0;
+            }
+            @if (stats != null)
+            {
+                @foreach (var stat in stats)
+                {
+                    var color = colors[i % colors.Length];
+                    i++;
+                    <div class="type-bar-item">
+                        <div class="type-label">
+                            <span>@stat.Type</span>
+                            <span>@stat.Count workouts</span>
+                        </div>
+                        <div class="type-bar-bg">
+                            <div class="type-bar-fill" style="width:@(Math.Min(100, stat.Count * 10))%;background:@color"></div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+
+    <!-- RECENT WORKOUTS TABLE -->
+    <div class="admin-card">
+        <div class="card-header">
+            <h2>Recent Workouts (All Users)</h2>
+        </div>
+        <div class="users-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Exercise</th>
+                        <th>User</th>
+                        <th>Type</th>
+                        <th>Duration</th>
+                        <th>Calories</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var workouts = ViewBag.RecentWorkouts as List<FitnessAppMVC.Models.Workout>;
+                    }
+                    @if (workouts != null)
+                    {
+                        @foreach (var w in workouts)
+                        {
+                            <tr>
+                                <td><strong>@w.Title</strong></td>
+                                <td>@(w.User?.Email ?? "Unknown")</td>
+                                <td><span class="type-badge @w.WorkoutType">@w.WorkoutType</span></td>
+                                <td>@w.DurationMinutes min</td>
+                                <td>@w.CaloriesBurned kcal</td>
+                                <td>@w.Date.ToString("MMM dd, yyyy")</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

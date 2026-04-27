@@ -1,0 +1,89 @@
+@model FitnessAppMVC.Models.Workout
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Edit Workout";
+    // Pre-compute for use in select
+    string wType = Model.WorkoutType ?? "strength";
+}
+
+<link rel="stylesheet" href="~/css/Tracker.css" asp-append-version="true" />
+
+<div class="tracker-container">
+    <div class="tracker-header">
+        <div>
+            <h1><i data-lucide="pencil" size="28"></i> Edit Workout</h1>
+            <p>Update your workout details</p>
+        </div>
+        <a href="/User/Workouts" class="btn-outline">
+            <i data-lucide="arrow-left" size="18"></i> Back
+        </a>
+    </div>
+
+    <div class="form-card">
+        <form method="post" action="/User/EditWorkout/@Model.Id">
+            @Html.AntiForgeryToken()
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Exercise Name *</label>
+                    <input type="text" name="Title" value="@Model.Title" required />
+                </div>
+                <div class="form-group">
+                    <label>Type *</label>
+                    @Html.DropDownList("WorkoutType", new SelectList(
+                        new[] {
+                            new { Val="strength", Text="Strength Training" },
+                            new { Val="cardio",   Text="Cardio" },
+                            new { Val="flexibility", Text="Flexibility" },
+                            new { Val="sports",  Text="Sports" }
+                        }, "Val", "Text", wType))
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Description *</label>
+                <input type="text" name="Description" value="@Model.Description" required />
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Duration (minutes) *</label>
+                    <input type="number" name="DurationMinutes" value="@Model.DurationMinutes" min="1" required />
+                </div>
+                <div class="form-group">
+                    <label>Calories Burned</label>
+                    <input type="number" name="CaloriesBurned" value="@Model.CaloriesBurned" min="0" />
+                </div>
+                <div class="form-group">
+                    <label>Date *</label>
+                    <input type="datetime-local" name="Date" value="@Model.Date.ToString("yyyy-MM-ddTHH:mm")" required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Sets</label>
+                    <input type="number" name="Sets" value="@Model.Sets" min="1" />
+                </div>
+                <div class="form-group">
+                    <label>Reps</label>
+                    <input type="number" name="Reps" value="@Model.Reps" min="1" />
+                </div>
+                <div class="form-group">
+                    <label>Weight (kg)</label>
+                    <input type="number" name="WeightKg" value="@Model.WeightKg" min="0" step="0.5" />
+                </div>
+            </div>
+            <div class="form-group">
+                <label>Notes</label>
+                <textarea name="Notes" rows="3">@Model.Notes</textarea>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i data-lucide="save" size="18"></i> Update Workout
+                </button>
+                <a href="/User/Workouts" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

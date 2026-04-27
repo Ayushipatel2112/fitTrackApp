@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel | FitTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/App.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/AdminDashboard.css" asp-append-version="true" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="admin-layout">
+    <div class="layout-container admin-layout">
+        <aside class="sidebar open" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand admin-brand">
+                    <div class="admin-logo-mark">
+                        <i data-lucide="shield" class="admin-logo-shield" size="19"></i>
+                        <i data-lucide="activity" class="admin-logo-pulse" size="12"></i>
+                    </div>
+                    <div class="admin-logo-text">
+                        <strong>FitTrack</strong>
+                        <small>Admin Panel</small>
+                    </div>
+                </div>
+                <button class="sidebar-toggle" id="sidebar-toggle">
+                    <i data-lucide="x" size="20"></i>
+                </button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="/Admin/Dashboard" class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Admin" && ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
+                    <i data-lucide="layout-dashboard" size="20"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="/Admin/Users" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Users" ? "active" : "")">
+                    <i data-lucide="users" size="20"></i>
+                    <span>User Management</span>
+                </a>
+                <a href="/Admin/Data" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Data" ? "active" : "")">
+                    <i data-lucide="database" size="20"></i>
+                    <span>Data Analytics</span>
+                </a>
+                <a href="/ServicesAdmin" class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "ServicesAdmin" ? "active" : "")">
+                    <i data-lucide="dumbbell" size="20"></i>
+                    <span>Manage Services</span>
+                </a>
+                <a href="/BlogAdmin" class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "BlogAdmin" ? "active" : "")">
+                    <i data-lucide="book-open" size="20"></i>
+                    <span>Manage Blog</span>
+                </a>
+                <a href="/ContactAdmin" class="nav-item @(ViewContext.RouteData.Values["Controller"]?.ToString() == "ContactAdmin" ? "active" : "")">
+                    <i data-lucide="mail" size="20"></i>
+                    <span>Messages</span>
+                </a>
+                <a href="/Admin/AuditLogs" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "AuditLogs" ? "active" : "")">
+                    <i data-lucide="activity" size="20"></i>
+                    <span>Audit Logs</span>
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="divider"></div>
+                <a href="/" class="nav-item">
+                    <i data-lucide="home" size="20"></i>
+                    <span>Public Site</span>
+                </a>
+                <form method="post" action="/Account/Logout" style="margin:0">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="nav-item logout-btn" style="width:100%;background:none;border:none;cursor:pointer;text-align:left">
+                        <i data-lucide="log-out" size="20"></i>
+                        <span>Logout</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <header class="top-header admin-header">
+                <button class="mobile-menu-toggle" id="mobile-toggle">
+                    <i data-lucide="menu" size="24"></i>
+                </button>
+                <div class="header-right">
+                    <div class="user-info">
+                        <span class="user-name">@User.Identity?.Name?.Split('@')[0]</span>
+                        <span class="user-role admin-badge">Administrator</span>
+                    </div>
+                    <div class="user-avatar admin-avatar">
+                        <span>@(User.Identity?.Name?.Length > 0 ? User.Identity.Name[0].ToString().ToUpper() : "A")</span>
+                    </div>
+                </div>
+            </header>
+
+            <main class="page-content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <i data-lucide="moon" id="theme-icon-moon"></i>
+        <i data-lucide="sun" id="theme-icon-sun" style="display: none;"></i>
+        <span id="theme-text">Dark</span>
+    </button>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        lucide.createIcons();
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const mobileToggle = document.getElementById('mobile-toggle');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('closed');
+                sidebar.classList.toggle('open');
+            });
+        }
+        if (mobileToggle) {
+            mobileToggle.addEventListener('click', () => {
+                sidebar.classList.toggle('open');
+            });
+        }
+    </script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

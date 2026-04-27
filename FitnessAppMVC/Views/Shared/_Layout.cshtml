@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FitTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/App.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Home.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Guest.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Auth.css" asp-append-version="true" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <i data-lucide="moon" id="theme-icon-moon"></i>
+        <i data-lucide="sun" id="theme-icon-sun" style="display: none;"></i>
+        <span id="theme-text">Dark</span>
+    </button>
+
+    @RenderBody()
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,65 @@
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Leaderboard";
+}
+<link rel="stylesheet" href="~/css/Tracker.css" asp-append-version="true" />
+
+<div class="tracker-container">
+    <div class="tracker-header">
+        <div>
+            <h1><i data-lucide="award" size="32"></i> Leaderboard</h1>
+            <p>See how you rank among FitTrack users</p>
+        </div>
+    </div>
+
+    <div class="form-card" style="padding:0;overflow:hidden;">
+        <div class="card-header" style="padding:1.25rem 1.5rem;border-bottom:1px solid var(--border-color)">
+            <h2 style="margin:0">🏆 Top Fitness Champions</h2>
+            <p style="font-size:0.85rem;color:var(--text-muted);margin:0">Ranked by total calories burned</p>
+        </div>
+        @{
+            var leaderboard = ViewBag.Leaderboard as List<(string name, int workouts, int calories, int minutes, int rank)>;
+            var currentUserId = ViewBag.CurrentUserId as string;
+        }
+        <div class="users-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rank</th>
+                        <th>User</th>
+                        <th>Workouts</th>
+                        <th>Total Calories Burned</th>
+                        <th>Total Minutes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (leaderboard != null && leaderboard.Any())
+                    {
+                        @foreach (var entry in leaderboard)
+                        {
+                            var rankEmoji = entry.rank switch { 1 => "🥇", 2 => "🥈", 3 => "🥉", _ => $"#{entry.rank}" };
+                            <tr>
+                                <td><strong>@rankEmoji</strong></td>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar">@(entry.name.Length > 0 ? entry.name[0].ToString() : "U")</div>
+                                        <span>@entry.name</span>
+                                    </div>
+                                </td>
+                                <td>@entry.workouts</td>
+                                <td><span class="stat-badge" style="background:#f59e0b20;color:#f59e0b">@entry.calories.ToString("N0") kcal</span></td>
+                                <td>@entry.minutes min</td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="5" class="empty-row">No data yet. Start logging workouts to appear on the leaderboard!</td></tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {<script>lucide.createIcons();</script>}

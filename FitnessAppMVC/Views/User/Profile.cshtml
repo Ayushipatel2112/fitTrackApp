@@ -1,0 +1,113 @@
+@model FitnessAppMVC.Models.UserProfileViewModel
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "My Profile";
+}
+<link rel="stylesheet" href="~/css/Tracker.css" asp-append-version="true" />
+
+<div class="tracker-container">
+    <div class="tracker-header">
+        <div>
+            <h1><i data-lucide="user" size="28"></i> My Profile</h1>
+            <p>Update your personal information and fitness goals</p>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success"><i data-lucide="check-circle" size="18"></i> @TempData["Success"]</div>
+    }
+
+    <div class="form-card">
+        <form method="post" action="/User/Profile">
+            @Html.AntiForgeryToken()
+
+            <div class="profile-email-display">
+                <i data-lucide="mail" size="18"></i>
+                <span>@ViewBag.Email</span>
+                <span class="badge-role">Member</span>
+            </div>
+
+            <h3 class="section-title">Personal Information</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Full Name</label>
+                    <input type="text" name="FullName" value="@Model.FullName" placeholder="Your full name" />
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" name="Phone" value="@Model.Phone" placeholder="+91-9999999999" />
+                </div>
+                <div class="form-group">
+                    <label>Age</label>
+                    <input type="number" name="Age" value="@Model.Age" min="10" max="120" placeholder="Your age" />
+                </div>
+            </div>
+
+            <h3 class="section-title">Body Measurements</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Height (cm)</label>
+                    <input type="number" name="HeightCm" value="@Model.HeightCm" step="0.1" min="50" max="300" placeholder="e.g., 175" />
+                </div>
+                <div class="form-group">
+                    <label>Weight (kg)</label>
+                    <input type="number" name="WeightKg" value="@Model.WeightKg" step="0.1" min="20" max="500" placeholder="e.g., 72" />
+                </div>
+            </div>
+
+            @if (Model.HeightCm.HasValue && Model.WeightKg.HasValue && Model.HeightCm > 0)
+            {
+                var bmi = Math.Round((double)(Model.WeightKg.Value / ((Model.HeightCm.Value / 100) * (Model.HeightCm.Value / 100))), 1);
+                var bmiStatus = bmi < 18.5 ? "Underweight" : bmi < 25 ? "Normal" : bmi < 30 ? "Overweight" : "Obese";
+                var bmiColor  = bmi < 18.5 ? "#f59e0b" : bmi < 25 ? "#22c55e" : bmi < 30 ? "#f97316" : "#ef4444";
+                <div class="bmi-display" style="border-color:@bmiColor">
+                    <span>BMI: <strong>@bmi</strong></span>
+                    <span class="bmi-status" style="color:@bmiColor">@bmiStatus</span>
+                </div>
+            }
+
+            <h3 class="section-title">Fitness Goals</h3>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Fitness Goal</label>
+                    @Html.DropDownList("FitnessGoal", new SelectList(
+                        new[] {
+                            new { Val="",                              Text="Select a goal..." },
+                            new { Val="Build muscle and lose fat",     Text="Build Muscle & Lose Fat" },
+                            new { Val="Lose weight",                   Text="Lose Weight" },
+                            new { Val="Build strength",                Text="Build Strength" },
+                            new { Val="Improve flexibility",           Text="Improve Flexibility" },
+                            new { Val="Improve cardio endurance",      Text="Improve Cardio Endurance" },
+                            new { Val="Stay healthy and active",       Text="Stay Healthy & Active" }
+                        }, "Val", "Text", Model.FitnessGoal))
+                </div>
+                <div class="form-group">
+                    <label>Activity Level</label>
+                    @Html.DropDownList("ActivityLevel", new SelectList(
+                        new[] {
+                            new { Val="",                   Text="Select level..." },
+                            new { Val="Sedentary",          Text="Sedentary (little or no exercise)" },
+                            new { Val="Lightly Active",     Text="Lightly Active (1-3 days/week)" },
+                            new { Val="Moderately Active",  Text="Moderately Active (3-5 days/week)" },
+                            new { Val="Very Active",        Text="Very Active (6-7 days/week)" },
+                            new { Val="Extremely Active",   Text="Extremely Active (2x/day)" }
+                        }, "Val", "Text", Model.ActivityLevel))
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">
+                    <i data-lucide="save" size="18"></i> Save Profile
+                </button>
+                <a href="/User/ChangePassword" class="btn-outline">
+                    <i data-lucide="lock" size="18"></i> Change Password
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

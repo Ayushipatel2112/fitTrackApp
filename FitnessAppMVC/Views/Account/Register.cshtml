@@ -1,0 +1,75 @@
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Create Account";
+}
+
+<div class="auth-page">
+    <div class="auth-card">
+        <div class="auth-logo">
+            <i data-lucide="heart" fill="#6366f1" color="#6366f1" size="40"></i>
+            <h1>Join FitTrack</h1>
+            <p>Create your free account and start your fitness journey</p>
+        </div>
+
+        @if (ViewBag.Error != null)
+        {
+            <div class="alert alert-error">
+                <i data-lucide="alert-circle" size="18"></i>
+                <span>@ViewBag.Error</span>
+            </div>
+        }
+
+        <form method="post" action="/Account/Register" id="register-form">
+            @Html.AntiForgeryToken()
+
+            <div class="form-group">
+                <label for="fullName">Full Name</label>
+                <div class="input-icon-wrap">
+                    <i data-lucide="user" size="18" class="input-icon"></i>
+                    <input type="text" id="fullName" name="fullName" placeholder="John Doe"
+                           autocomplete="name" required class="form-input" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <div class="input-icon-wrap">
+                    <i data-lucide="mail" size="18" class="input-icon"></i>
+                    <input type="email" id="email" name="email" placeholder="you@example.com"
+                           autocomplete="email" required class="form-input" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password <small>(min 6 characters)</small></label>
+                <div class="input-icon-wrap">
+                    <i data-lucide="lock" size="18" class="input-icon"></i>
+                    <input type="password" id="password" name="password" placeholder="••••••••"
+                           minlength="6" required class="form-input" id="pw1" />
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <div class="input-icon-wrap">
+                    <i data-lucide="lock" size="18" class="input-icon"></i>
+                    <input type="password" id="confirmPassword" name="confirmPassword" placeholder="••••••••"
+                           required class="form-input" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn-auth">
+                <i data-lucide="user-plus" size="20"></i>
+                Create Account
+            </button>
+        </form>
+
+        <p class="auth-footer">
+            Already have an account? <a href="/Account/Login">Sign in</a>
+        </p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

@@ -1,0 +1,72 @@
+@model FitnessAppMVC.Models.Meal
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Edit Meal";
+    string mType = Model.MealType ?? "Breakfast";
+}
+<link rel="stylesheet" href="~/css/Tracker.css" asp-append-version="true" />
+
+<div class="tracker-container">
+    <div class="tracker-header">
+        <div>
+            <h1><i data-lucide="pencil" size="28"></i> Edit Meal</h1>
+            <p>Update your meal details</p>
+        </div>
+        <a href="/User/Meals" class="btn-outline"><i data-lucide="arrow-left" size="18"></i> Back</a>
+    </div>
+
+    <div class="form-card">
+        <form method="post" action="/User/EditMeal/@Model.Id">
+            @Html.AntiForgeryToken()
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Meal Name *</label>
+                    <input type="text" name="MealName" value="@Model.MealName" required />
+                </div>
+                <div class="form-group">
+                    <label>Meal Type *</label>
+                    @Html.DropDownList("MealType", new SelectList(
+                        new[] {
+                            new { Val="Breakfast", Text="Breakfast" },
+                            new { Val="Lunch",     Text="Lunch" },
+                            new { Val="Dinner",    Text="Dinner" },
+                            new { Val="Snack",     Text="Snack" }
+                        }, "Val", "Text", mType))
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Calories</label>
+                    <input type="number" name="Calories" value="@Model.Calories" min="0" />
+                </div>
+                <div class="form-group">
+                    <label>Protein (g)</label>
+                    <input type="number" name="Protein" value="@Model.Protein" step="0.1" />
+                </div>
+                <div class="form-group">
+                    <label>Carbs (g)</label>
+                    <input type="number" name="Carbs" value="@Model.Carbs" step="0.1" />
+                </div>
+                <div class="form-group">
+                    <label>Fat (g)</label>
+                    <input type="number" name="Fat" value="@Model.Fat" step="0.1" />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Date & Time</label>
+                    <input type="datetime-local" name="LoggedAt" value="@Model.LoggedAt.ToString("yyyy-MM-ddTHH:mm")" />
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <input type="text" name="Notes" value="@Model.Notes" />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit"><i data-lucide="save" size="18"></i> Update Meal</button>
+                <a href="/User/Meals" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+@section Scripts {<script>lucide.createIcons();</script>}

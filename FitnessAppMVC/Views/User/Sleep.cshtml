@@ -1,0 +1,164 @@
+@model IEnumerable<FitnessAppMVC.Models.SleepRecord>
+@{
+    Layout = "_UserLayout";
+    ViewData["Title"] = "Sleep Tracker";
+}
+
+<link rel="stylesheet" href="~/css/Tracker.css" asp-append-version="true" />
+
+<div class="tracker-container">
+    <div class="tracker-header">
+        <div>
+            <h1><i data-lucide="moon" size="32"></i> Sleep Tracker</h1>
+            <p>Monitor your sleep quality and patterns</p>
+        </div>
+        <button class="btn-primary" id="add-sleep-btn">
+            <i data-lucide="plus" size="20"></i> Log Sleep
+        </button>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success"><i data-lucide="check-circle" size="18"></i> @TempData["Success"]</div>
+    }
+
+    <!-- SUMMARY -->
+    <div class="summary-bar">
+        <div class="summary-item">
+            <span class="summary-label">7-Day Avg Sleep</span>
+            <span class="summary-value" style="color:#8b5cf6">@ViewBag.AvgHours hrs</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Total Records</span>
+            <span class="summary-value" style="color:#6366f1">@Model.Count()</span>
+        </div>
+        <div class="summary-item">
+            <span class="summary-label">Recommended</span>
+            <span class="summary-value" style="color:#22c55e">7-9 hrs</span>
+        </div>
+    </div>
+
+    <!-- ADD SLEEP FORM -->
+    <div class="form-card" id="sleep-form" style="display:none;">
+        <h2>Log Sleep Record</h2>
+        <form method="post" action="/User/AddSleep">
+            @Html.AntiForgeryToken()
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Sleep Date *</label>
+                    <input type="date" name="SleepDate" value="@DateTime.Today.ToString("yyyy-MM-dd")" required />
+                </div>
+                <div class="form-group">
+                    <label>Bed Time *</label>
+                    <input type="time" name="BedTime" value="22:30" required />
+                </div>
+                <div class="form-group">
+                    <label>Wake Time *</label>
+                    <input type="time" name="WakeTime" value="06:30" required />
+                </div>
+                <div class="form-group">
+                    <label>Hours Slept *</label>
+                    <input type="number" name="HoursSlept" min="0" max="24" step="0.25" value="8" required />
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label>Sleep Quality *</label>
+                    <select name="Quality">
+                        <option value="Excellent">Excellent 😴</option>
+                        <option value="Good" selected>Good 🙂</option>
+                        <option value="Fair">Fair 😐</option>
+                        <option value="Poor">Poor 😞</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Notes</label>
+                    <input type="text" name="Notes" placeholder="Optional notes..." />
+                </div>
+            </div>
+            <div class="form-actions">
+                <button type="submit" class="btn-submit"><i data-lucide="save" size="18"></i> Save Record</button>
+                <button type="button" class="btn-cancel" id="cancel-sleep-btn">Cancel</button>
+            </div>
+        </form>
+    </div>
+
+    <!-- SLEEP RECORDS -->
+    <div class="tracker-content">
+        @if (!Model.Any())
+        {
+            <div class="empty-state">
+                <i data-lucide="moon" size="48"></i>
+                <h3>No sleep records yet</h3>
+                <p>Start tracking your sleep for better recovery!</p>
+            </div>
+        }
+        else
+        {
+            <div class="sleep-grid">
+                @foreach (var s in Model)
+                {
+                    var qualityColor = s.Quality switch
+                    {
+                        "Excellent" => "#22c55e",
+                        "Good" => "#6366f1",
+                        "Fair" => "#f59e0b",
+                        "Poor" => "#ef4444",
+                        _ => "#6366f1"
+                    };
+                    <div class="sleep-card">
+                        <div class="sleep-card-header">
+                            <div>
+                                <h3>@s.SleepDate.ToString("MMM dd, yyyy")</h3>
+                                <span class="quality-badge" style="background:@(qualityColor)20;color:@qualityColor">
+                                    @s.Quality
+                                </span>
+                            </div>
+                            <div class="card-actions">
+                                <a href="/User/EditSleep/@s.Id" class="btn-icon-edit">
+                                    <i data-lucide="pencil" size="16"></i>
+                                </a>
+                                <form method="post" action="/User/DeleteSleep" style="display:inline"
+                                      onsubmit="return confirm('Delete this sleep record?')">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="id" value="@s.Id" />
+                                    <button type="submit" class="btn-icon-danger">
+                                        <i data-lucide="trash-2" size="16"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="sleep-details">
+                            <div class="sleep-stat">
+                                <span class="sleep-hours">@s.HoursSlept</span>
+                                <span class="sleep-hours-label">hours</span>
+                            </div>
+                            <div class="sleep-times">
+                                <div><i data-lucide="moon" size="14"></i> Bed: @s.BedTime</div>
+                                <div><i data-lucide="sun" size="14"></i> Wake: @s.WakeTime</div>
+                            </div>
+                        </div>
+                        @if (!string.IsNullOrEmpty(s.Notes))
+                        {
+                            <p class="sleep-notes">📝 @s.Notes</p>
+                        }
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+        document.getElementById('add-sleep-btn').addEventListener('click', () => {
+            const f = document.getElementById('sleep-form');
+            f.style.display = f.style.display === 'none' ? 'block' : 'none';
+            f.scrollIntoView({ behavior: 'smooth' });
+        });
+        document.getElementById('cancel-sleep-btn').addEventListener('click', () => {
+            document.getElementById('sleep-form').style.display = 'none';
+        });
+    </script>
+}

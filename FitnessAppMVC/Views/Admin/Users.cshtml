@@ -1,0 +1,132 @@
+@{
+    Layout = "_AdminLayout";
+    ViewData["Title"] = "User Management";
+}
+
+<div class="admin-container">
+    <div class="admin-header admin-page-header">
+        <div>
+            <h1>User Management</h1>
+            <p>Manage all registered users</p>
+        </div>
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success"><i data-lucide="check-circle" size="18"></i> @TempData["Success"]</div>
+    }
+
+    <!-- SEARCH -->
+    <div class="admin-card">
+        <form method="get" action="/Admin/Users" class="search-bar">
+            <div class="input-icon-wrap">
+                <i data-lucide="search" size="18" class="input-icon"></i>
+                <input type="text" name="search" value="@ViewBag.Search"
+                       placeholder="Search by name or email..." class="form-input" />
+            </div>
+            <button type="submit" class="btn-primary">Search</button>
+            @if (!string.IsNullOrEmpty(ViewBag.Search as string))
+            {
+                <a href="/Admin/Users" class="btn-outline">Clear</a>
+            }
+        </form>
+    </div>
+
+    <!-- USERS TABLE -->
+    <div class="admin-card">
+        <div class="card-header">
+            <h2>All Users (@((ViewBag.UserList as dynamic)?.Count ?? 0))</h2>
+        </div>
+        <div class="users-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Profile</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var userList = ViewBag.UserList as List<(Microsoft.AspNetCore.Identity.IdentityUser user, IList<string> roles, FitnessAppMVC.Models.UserProfile? profile)>;
+                    }
+                    @if (userList != null)
+                    {
+                        @foreach (var item in userList)
+                        {
+                            var initials = item.user.Email?.Length > 0 ? item.user.Email[0].ToString().ToUpper() : "U";
+                            var isLocked = item.user.LockoutEnd.HasValue && item.user.LockoutEnd > DateTimeOffset.Now;
+                            <tr>
+                                <td>
+                                    <div class="user-cell">
+                                        <div class="user-avatar @(item.roles.Contains("Admin") ? "admin-avatar" : "")">
+                                            @initials
+                                        </div>
+                                        <div>
+                                            <span class="user-name-cell">@(item.profile?.FullName ?? item.user.Email?.Split('@')[0])</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>@item.user.Email</td>
+                                <td>
+                                    @foreach (var r in item.roles)
+                                    {
+                                        <span class="role-badge @(r == "Admin" ? "admin-role" : "user-role")">@r</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.profile != null)
+                                    {
+                                        <span class="profile-info">@item.profile.FitnessGoal</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No profile</span>
+                                    }
+                                </td>
+                                <td>
+                                    @if (isLocked)
+                                    {
+                                        <span class="status-badge inactive">Locked</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="status-badge active">Active</span>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="action-btns">
+                                        <form method="post" action="/Admin/ToggleUserStatus"
+                                              onsubmit="return confirm('Toggle user status?')">
+                                            @Html.AntiForgeryToken()
+                                            <input type="hidden" name="id" value="@item.user.Id" />
+                                            <button type="submit" class="btn-xs @(isLocked ? "btn-success" : "btn-warning")">
+                                                @(isLocked ? "Unlock" : "Lock")
+                                            </button>
+                                        </form>
+                                        @if (!item.roles.Contains("Admin"))
+                                        {
+                                            <form method="post" action="/Admin/DeleteUser"
+                                                  onsubmit="return confirm('Are you sure? This will permanently delete this user and all their data.')">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="id" value="@item.user.Id" />
+                                                <button type="submit" class="btn-xs btn-danger">Delete</button>
+                                            </form>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>lucide.createIcons();</script>
+}

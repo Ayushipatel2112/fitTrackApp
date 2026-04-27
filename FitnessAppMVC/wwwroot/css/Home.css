@@ -1,0 +1,18 @@
+@import url('Guest.css');
+
+/* Custom Home-specific overrides can go here */
+@import url('Guest.css');
+
+/* Custom Home-specific overrides can go here */
+.home-page {
+  background: var(--bg-color);
+}
+
+.hero-title {
+  color: var(--text-primary);
+  display: inline-block;
+}
+
+body.dark-theme .home-page {
+  background: var(--bg-color);
+}

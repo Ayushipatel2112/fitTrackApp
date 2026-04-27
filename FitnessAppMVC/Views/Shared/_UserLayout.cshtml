@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - FitTrack</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="~/css/index.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/App.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/UserPages.css" asp-append-version="true" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="layout-container user-top-layout">
+        <div class="main-content">
+            <header class="top-header user-top-header">
+                <div class="user-top-left">
+                    <a href="/User/Dashboard" class="brand user-top-brand">
+                        <i data-lucide="heart" fill="#60a5fa" color="#60a5fa" size="28"></i>
+                        <span>FitTrack</span>
+                    </a>
+                    <button class="mobile-menu-toggle user-top-toggle" id="mobile-toggle">
+                        <i data-lucide="menu" size="22"></i>
+                    </button>
+                </div>
+
+                <div class="header-right">
+                    <div class="user-info">
+                        <span class="user-name">@(User.Identity?.Name?.Split('@')[0] ?? "User")</span>
+                        <span class="user-role">Member</span>
+                    </div>
+                    <div class="user-avatar">
+                        <span>@(User.Identity?.Name?.Length > 0 ? User.Identity.Name[0].ToString().ToUpper() : "U")</span>
+                    </div>
+                </div>
+            </header>
+
+            <nav class="user-top-nav" id="user-nav">
+                <div class="user-top-nav-links">
+                    <a href="/User/Dashboard" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Dashboard" ? "active" : "")">
+                        <i data-lucide="layout-dashboard" size="18"></i>
+                        <span>Dashboard</span>
+                    </a>
+                    <a href="/User/Workouts" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() is "Workouts" or "EditWorkout" ? "active" : "")">
+                        <i data-lucide="dumbbell" size="18"></i>
+                        <span>Workouts</span>
+                    </a>
+                    <a href="/User/Meals" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() is "Meals" or "EditMeal" ? "active" : "")">
+                        <i data-lucide="utensils" size="18"></i>
+                        <span>Meals</span>
+                    </a>
+                    <a href="/User/Sleep" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() is "Sleep" or "EditSleep" ? "active" : "")">
+                        <i data-lucide="moon" size="18"></i>
+                        <span>Sleep</span>
+                    </a>
+                    <a href="/User/Progress" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Progress" ? "active" : "")">
+                        <i data-lucide="trending-up" size="18"></i>
+                        <span>Progress</span>
+                    </a>
+                    <a href="/User/Challenges" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Challenges" ? "active" : "")">
+                        <i data-lucide="trophy" size="18"></i>
+                        <span>Challenges</span>
+                    </a>
+                    <a href="/User/Leaderboard" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Leaderboard" ? "active" : "")">
+                        <i data-lucide="award" size="18"></i>
+                        <span>Leaderboard</span>
+                    </a>
+                </div>
+
+                <div class="user-top-nav-actions">
+                    <a href="/User/Profile" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "Profile" ? "active" : "")">
+                        <i data-lucide="user" size="18"></i>
+                        <span>Profile</span>
+                    </a>
+                    <a href="/User/ChangePassword" class="nav-item @(ViewContext.RouteData.Values["Action"]?.ToString() == "ChangePassword" ? "active" : "")">
+                        <i data-lucide="lock" size="18"></i>
+                        <span>Security</span>
+                    </a>
+                    <form method="post" action="/Account/Logout" style="margin:0">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="nav-item logout-btn" style="background:none;border:none;cursor:pointer;">
+                            <i data-lucide="log-out" size="18"></i>
+                            <span>Logout</span>
+                        </button>
+                    </form>
+                </div>
+            </nav>
+
+            <main class="page-content">
+                @RenderBody()
+            </main>
+        </div>
+    </div>
+
+    <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">
+        <i data-lucide="moon" id="theme-icon-moon"></i>
+        <i data-lucide="sun" id="theme-icon-sun" style="display: none;"></i>
+        <span id="theme-text">Dark</span>
+    </button>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

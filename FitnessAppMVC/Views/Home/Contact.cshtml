@@ -1,0 +1,114 @@
+@model FitnessAppMVC.Models.ContactMessage
+@{
+    ViewData["Title"] = "Contact Us";
+}
+
+<div class="home-page marketing-page">
+    <nav class="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i data-lucide="heart" fill="#60a5fa" color="#60a5fa" size="32"></i>
+                <span>FitTrack</span>
+            </div>
+
+            <div class="nav-menu" aria-label="Primary">
+                <a href="/" class="nav-link">Home</a>
+                <a href="/Home/Services" class="nav-link">Services</a>
+                <a href="/Home/Blog" class="nav-link">Blog</a>
+                <a href="/Home/Contact" class="nav-link active">Contact Us</a>
+            </div>
+
+            <div class="nav-links nav-actions">
+                <a href="/Account/Login" class="btn-outline">Login</a>
+                <a href="/Account/Register" class="btn-primary">Get Started</a>
+            </div>
+        </div>
+    </nav>
+
+    <section class="marketing-hero contact-hero">
+        <div class="container">
+            <p class="hero-kicker">
+                <i data-lucide="sparkles" size="16"></i>
+                We are here to support your journey
+            </p>
+            <h1 class="hero-title">Contact FitTrack</h1>
+            <p class="marketing-subtitle">
+                Have a question about features, onboarding, or your account? Send us a message and our team
+                will respond quickly.
+            </p>
+        </div>
+    </section>
+
+    <section class="contact-section">
+        <div class="container contact-grid">
+            <aside class="contact-panel">
+                <h2>Reach Us Directly</h2>
+                <p>Choose the best way to connect with the FitTrack team.</p>
+                <ul class="contact-info-list">
+                    <li><i data-lucide="mail" size="18"></i><span>support@fittrack.app</span></li>
+                    <li><i data-lucide="phone" size="18"></i><span>+1 (800) 555-9147</span></li>
+                    <li><i data-lucide="map-pin" size="18"></i><span>120 Wellness Ave, San Diego, CA</span></li>
+                    <li><i data-lucide="clock-3" size="18"></i><span>Mon-Fri, 9:00 AM to 6:00 PM</span></li>
+                </ul>
+            </aside>
+
+            <div class="contact-form-card">
+                <h2>Send a Message</h2>
+                    @if (TempData["SuccessMessage"] != null)
+                    {
+                        <div style="background: rgba(16, 185, 129, 0.1); color: #10b981; border: 1px solid #10b981; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                            <i data-lucide="check-circle-2" size="18" style="vertical-align: middle; margin-right: 0.5rem;"></i>
+                            @TempData["SuccessMessage"]
+                        </div>
+                    }
+                <form asp-action="Contact" method="post" class="contact-form">
+                    @Html.AntiForgeryToken()
+                    <div class="contact-input-grid">
+                        <label>
+                            Name
+                            <input asp-for="Name" type="text" placeholder="Your full name" autoComplete="name" required />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </label>
+                        <label>
+                            Email
+                            <input asp-for="Email" type="email" placeholder="name@example.com" autoComplete="email" required />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </label>
+                    </div>
+                    <label>
+                        Subject
+                        <input asp-for="Subject" type="text" placeholder="How can we help?" />
+                        <span asp-validation-for="Subject" class="text-danger"></span>
+                    </label>
+                    <label>
+                        Message
+                        <textarea asp-for="Message" placeholder="Share your question or feedback" rows="5" required></textarea>
+                        <span asp-validation-for="Message" class="text-danger"></span>
+                    </label>
+                    <button type="submit" class="btn-primary contact-submit-btn">
+                        Send Message <i data-lucide="send" size="16"></i>
+                    </button>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/Home/Services">Services</a>
+                <a href="/Home/Blog">Blog</a>
+                <a href="/Home/Contact">Contact</a>
+            </div>
+            <p>&copy; 2026 FitTrack. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+@section Scripts {
+    <script>
+        lucide.createIcons();
+    </script>
+}
